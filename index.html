@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Live Pocket自動購入設定</title>
+    <link rel="stylesheet" href="./css/simple-css.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/simple-script.js"></script>
+</head>
+
+<body>
+    <div class="msr_text_05">
+        <label for="login_url">ログインページのURL:</label>
+        <input id="login_url" class="input-text" name='login_url' type='text' value="https://t.livepocket.jp/login">
+        </p>
+
+        <p>
+            <label for="buy_url">チケット購入ページのURL:</label>
+            <input id="buy_url" class="input-text" name='buy_url' type='text'>
+        </p>
+    </div>
+
+    <br>
+    <div class="msr_text_05">
+        <p>
+            <label for="mail">ログインメールアドレス:</label>
+            <input id="mail" class="input-text" name='mail' type='text'>
+        </p>
+        <p>
+            <label for="password">パスワード:</label>
+            <input id="password" class="input-text" name='password' type='text'>
+        </p>
+    </div>
+
+    <br>
+    <div class="msr_text_05">
+        <p>
+            <label for="launched_time">発売開始時刻(例21:00:00):</label>
+            <input id="launched_time" class="input-text" name='launched_time' type='text'>
+        </p>
+    </div>
+
+    <div class="msr_pulldown_05">
+        <p>
+            <label for="ticket_type">チケット種別:</label>
+            <select id="ticket_type" name='ticket_type'>
+                <option value="0">1個目</option>
+                <option value="1">2個目</option>
+                <option value="2">3個目</option>
+                <option value="3">4個目</option>
+                <option value="4">5個目</option>
+                <option value="5">6個目</option>
+                <option value="6">7個目</option>
+                <option value="7">8個目</option>
+                <option value="8">9個目</option>
+            </select>
+        </p>
+
+        <p>
+            <label for="ticket_num">購入枚数:</label>
+            <select id="ticket_num" name='ticket_num'>
+                <option value="1">1枚</option>
+                <option value="2">2枚</option>
+                <option value="3">3枚</option>
+                <option value="4">4枚</option>
+                <option value="5">5枚</option>
+                <option value="6">6枚</option>
+                <option value="7">7枚</option>
+                <option value="8">8枚</option>
+                <option value="9">9枚</option>
+            </select>
+        </p>
+
+        <p>
+            <label for="cvs_type">支払いをするコンビニを選択:</label>
+            <select id="cvs_type" name='cvs_type'>
+                <option value="">選択してください</option>
+                <option value="002">ローソン</option>
+                <option value="016">ファミリーマート</option>
+                <option value="005">ミニストップ</option>
+                <option value="010">デイリーヤマザキ</option>
+                <option value="018">セイコーマート</option>
+            </select>
+        </p>
+    </div>
+
+    <div class="msr_sendbtn_05">
+        <input id="exe-button" type="submit" onclick="execute()" value="設定ファイル作成">
+    </div>
+
+</body>
+
+</html>
