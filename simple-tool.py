@@ -136,7 +136,7 @@ def buy_main():
 
         wait = WebDriverWait(driver, 2)
         buy_element = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="submit-btn"]/button/span')))
-        #buy_element.click()
+        buy_element.click()
 
         #driver.find_element_by_xpath('//*[@id="submit-btn"]/button/span').click()
     except NoSuchElementException:
