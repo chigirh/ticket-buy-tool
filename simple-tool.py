@@ -39,8 +39,6 @@ options.add_argument('--blink-settings=imagesEnabled=false')
 json_file= open('conf.json', 'r')
 conf_data = json.load(json_file)
 
-
-
 login_url = conf_data['login_url']
 page_url = conf_data['buy_url']
 
@@ -54,11 +52,17 @@ ticket_num = conf_data['ticket_num']
 
 cvs_type = conf_data['cvs_type']
 
-driver = webdriver.Chrome(chrome_options=options)
+#driver = webdriver.Chrome(chrome_options=options)
+driver = webdriver.Chrome()
 driver.implicitly_wait(2)
 
 
 # 標準時刻とPC内のズレの補正
+start1 = datetime.datetime.strptime(start_time, '%H:%M:%S').time()
+start2 = datetime.datetime.combine(datetime.date.today(), start1) - datetime.timedelta(minutes=1)
+login_time = start2.strftime("%H:%M:%S")
+
+
 r = requests.get('https://ntp-a1.nict.go.jp/cgi-bin/jst')
 soup = BeautifulSoup(r.text,'lxml')
 
@@ -76,10 +80,6 @@ else:
     t5 = -t4
     t6 = 0
     t7 = 0
-
-start1 = datetime.datetime.strptime(start_time, '%H:%M:%S').time()
-start2 = datetime.datetime.combine(datetime.date.today(), start1) - datetime.timedelta(minutes=1)
-login_time = start2.strftime("%H:%M:%S")
 
 start5 = datetime.datetime.combine(datetime.date.today(), start1) + datetime.timedelta(seconds = t6)
 buy_time = start5.strftime("%H:%M:%S")
@@ -107,7 +107,7 @@ def login_job():
 # 購入処理
 def buy_job():
 
-    print('ticket_type_idxd : '+ticket_type_idxd)
+    print('ticket_type_idxd : '+str(ticket_type_idxd))
     print('ticket_num : '+ticket_num)
 
     cur_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
@@ -144,8 +144,8 @@ def buy_main():
         buy_element.click()
 
         #driver.find_element_by_xpath('//*[@id="submit-btn"]/button/span').click()
-    except :
-        traceback.print_exc()
+    except Exception as e:
+        print("例外args:", e.args)
         print('再試行')
         buy_main()
 
