@@ -25,6 +25,8 @@ import math
 import json
 import os
 
+import traceback
+
 
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
@@ -105,6 +107,9 @@ def login_job():
 # 購入処理
 def buy_job():
 
+    print('ticket_type_idxd : '+ticket_type_idxd)
+    print('ticket_num : '+ticket_num)
+
     cur_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     print('購入開始('+ cur_time +')')
 
@@ -139,7 +144,8 @@ def buy_main():
         buy_element.click()
 
         #driver.find_element_by_xpath('//*[@id="submit-btn"]/button/span').click()
-    except NoSuchElementException:
+    except :
+        traceback.print_exc()
         print('再試行')
         buy_main()
 
