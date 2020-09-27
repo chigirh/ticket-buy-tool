@@ -62,7 +62,31 @@ start1 = datetime.datetime.strptime(start_time, '%H:%M:%S').time()
 start2 = datetime.datetime.combine(datetime.date.today(), start1) - datetime.timedelta(minutes=1)
 login_time = start2.strftime("%H:%M:%S")
 
-buy_time = start_time
+try:
+    r = requests.get('https://ntp-a1.nict.go.jp/cgi-bin/jst')
+    soup = BeautifulSoup(r.text,'lxml')
+
+    t1 = soup.find("body").string
+    t2 = t1.rstrip('\n')
+    t3 = time.time()
+    t4 = float(t2)-t3
+
+    if t4 >= 0:
+        t5 = 0
+        t6 = math.ceil(t4)
+        t7 = t4 - t6
+
+    else:
+        t5 = -t4
+        t6 = 0
+        t7 = 0
+
+    start5 = datetime.datetime.combine(datetime.date.today(), start1) + datetime.timedelta(seconds = t6)
+    buy_time = start5.strftime("%H:%M:%S")
+except:
+    print('現在時刻を取得できなかったので処理時差の補正を行わずに処理継続')
+    buy_time = start_time
+
 
 print('ログイン時刻' + login_time)
 print('購入開始時刻' + buy_time)
@@ -121,7 +145,7 @@ def buy_main():
 
         wait = WebDriverWait(driver, 2)
         buy_element = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="submit-btn"]/button/span')))
-        buy_element.click()
+        #buy_element.click()
 
         #driver.find_element_by_xpath('//*[@id="submit-btn"]/button/span').click()
     except Exception as e:
