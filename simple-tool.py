@@ -33,6 +33,8 @@ options.add_argument('--headless')
 options.add_argument('--disable-gpu')
 options.add_argument('--lang=ja')
 options.add_argument('--blink-settings=imagesEnabled=false')
+options.add_argument('--ignore-certificate-errors')
+options.add_argument('--ignore-ssl-errors')
 
 #設定ファイル
 
@@ -54,7 +56,7 @@ cvs_type = conf_data['cvs_type']
 
 #driver = webdriver.Chrome(chrome_options=options)
 driver = webdriver.Chrome()
-driver.implicitly_wait(2)
+driver.implicitly_wait(10)
 
 
 # 標準時刻とPC内のズレの補正
@@ -122,28 +124,38 @@ def buy_job():
     cur_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     print('購入完了('+ cur_time +')')
 
-    driver.quit()
 
 def buy_main():
     try:
         driver.get(page_url)
 
+        print('チケット枚数選択開始')
         num_element = driver.find_elements_by_xpath("//select[contains(@id, 'ticket')]")[ticket_type_idxd]
         num_select_element = Select(num_element)
         num_select_element.select_by_value(ticket_num)
+        print('チケット枚数選択終了')
 
 
-        wait = WebDriverWait(driver, 2)
+        print('チケット購入ボタン押下開始')
+        wait = WebDriverWait(driver, 10)
         element = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="submit"]/p[3]/button')))
         element.click()
+        print('チケット購入ボタン押下終了')
 
-        driver.find_element_by_id("other_payment_method_select_img").click()
+        print('コンビニ決済選択開始')
+        wait = WebDriverWait(driver, 10)
+        check_element = driver.find_element_by_id('other_payment_method_select_img')
+        check_element.click()
+        print('コンビニ決済選択終了')
         
+        print('振り込み先のコンビニ選択開始')
         cvs_element = driver.find_element_by_xpath('//*[@id="cvs_select"]')
         cvs_select_element = Select(cvs_element)
         cvs_select_element.select_by_value(cvs_type)
+        print('振り込み先のコンビニ選択終了')
 
-        wait = WebDriverWait(driver, 2)
+        print('購入ボタン押下開始')
+        wait = WebDriverWait(driver, 10)
         buy_element = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="submit-btn"]/button/span')))
         buy_element.click()
 
