@@ -33,8 +33,6 @@ options.add_argument('--headless')
 options.add_argument('--disable-gpu')
 options.add_argument('--lang=ja')
 options.add_argument('--blink-settings=imagesEnabled=false')
-options.add_argument('--ignore-certificate-errors')
-options.add_argument('--ignore-ssl-errors')
 
 #設定ファイル
 
@@ -56,7 +54,7 @@ cvs_type = conf_data['cvs_type']
 
 #driver = webdriver.Chrome(chrome_options=options)
 driver = webdriver.Chrome()
-driver.implicitly_wait(10)
+driver.implicitly_wait(30)
 
 
 # 標準時刻とPC内のズレの補正
