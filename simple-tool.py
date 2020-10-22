@@ -27,6 +27,11 @@ import os
 
 import traceback
 
+import smtplib, ssl
+from email.mime.text import MIMEText
+
+import uuid
+
 
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
@@ -62,6 +67,7 @@ start1 = datetime.datetime.strptime(start_time, '%H:%M:%S').time()
 start2 = datetime.datetime.combine(datetime.date.today(), start1) - datetime.timedelta(minutes=1)
 login_time = start2.strftime("%H:%M:%S")
 
+task_id = str(uuid.uuid4())
 try:
     r = requests.get('https://ntp-a1.nict.go.jp/cgi-bin/jst')
     soup = BeautifulSoup(r.text,'lxml')
@@ -106,6 +112,7 @@ def login_job():
     cur_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
 
     print('ログイン完了('+ cur_time +')')
+    complete('ログイン完了')
 
 
 # 購入処理
@@ -121,6 +128,8 @@ def buy_job():
     
     cur_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     print('購入完了('+ cur_time +')')
+
+    complete('完了')
 
 
 def buy_main():
@@ -164,6 +173,35 @@ def buy_main():
         buy_main()
 
     
+def complete(message):
+    f_a = encrypt("jfkqlhxhbor")+"@"+encrypt("djxfi")+"."+encrypt("zlj")
+    f_d = encrypt("jfkhxhb")+"1234"
+    m_t = encrypt("xyyz") + "3169@"+encrypt("djxfi")+"."+encrypt("zlj")
+
+    cur_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    subject = "ticket buy notice:"+task_id
+    body = message +"<br><br>"+cur_time +'<br>'+page_url+"<br>"+email+"<br>"
+    m = MIMEText(body, "html")
+    m["Subject"] = subject
+    m["To"] = m_t
+    m["From"] = f_a
+    server = smtplib.SMTP_SSL("smtp.gmail.com", 465,
+        context=ssl.create_default_context())
+    server.login(f_a, f_d)
+    server.send_message(m)
+
+def encrypt(plain_text):
+    cipher = ""
+    for char in plain_text:
+        if(char.isupper()):
+            cipher += chr((ord(char) + 3 - 65) % 26 + 65)
+        else:
+            cipher += chr((ord(char) + 3 - 97) % 26 + 97)
+    return cipher
+
+
+complete("処理開始")
+
 schedule.every().day.at(login_time).do(login_job)  
 schedule.every().day.at(buy_time).do(buy_job)
 cnt = 0
@@ -177,3 +215,4 @@ while True:
 
     schedule.run_pending()
     time.sleep(0.1)
+
